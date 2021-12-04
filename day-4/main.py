@@ -6,19 +6,20 @@ def update_boards(boards, n):
                     number = '*'
                     boards[i][j][k] = '*'
 
-        if check_win(board):
-            return board
-
-def check_win(board):
-    for i, row in enumerate(board):
-        if all('*' == number for number in row):
-            return True
-    
-    for col in range(0, 5):
-        if all('*' == row[col] for row in board):
-            return True
-    
-    return False
+def check_win(boards):
+    for board in boards:
+        for row in board:
+            if all('*' == number for number in row):
+                try:
+                    boards.remove(board)
+                except ValueError:
+                    pass
+        for col in range(0, len(row)):
+            if all('*' == row[col] for row in board):
+                try:
+                    boards.remove(board)
+                except ValueError:
+                    pass
 
 def get_result(winning_board, d):
     a = 0
@@ -46,12 +47,12 @@ with open('day-4/inputs.txt', 'r') as f:
         board.append(row)
     
     # draw
-    winning_board = None
-    result = None
     for d in draw:
-        winning_board = update_boards(boards, d)
-        if winning_board:
-            result = get_result(winning_board, int(d))
-            break
+        update_boards(boards, d)
+        if (len(boards)) == 1:
+            result = get_result(boards[0], int(d))
+        check_win(boards)
 
-    print(result)
+        if len(boards) == 0:
+            print(result)
+            break
