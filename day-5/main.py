@@ -1,7 +1,28 @@
 def update_map(map, x_pos, y_pos):
-    for x in range(min(x_pos), max(x_pos) + 1):
-        for y in range(min(y_pos), max(y_pos) + 1):
-            map[x][y] += 1
+    # horizontal or vertical lines
+    if x_pos[0] == x_pos[1] or y_pos[0] == y_pos[1]: 
+        for x in range(min(x_pos), max(x_pos) + 1):
+            for y in range(min(y_pos), max(y_pos) + 1):
+                map[x][y] += 1
+    
+    # diagonal lines
+    else:
+        # reverse direction
+        if x_pos[0] > x_pos[1]:
+            x_pos[0], x_pos[1] = x_pos[1], x_pos[0]
+            y_pos[0], y_pos[1] = y_pos[1], y_pos[0]
+
+        diff = x_pos[1] - x_pos[0]
+
+        # diagonal from top left to bottom right and bottom right to top left
+        if (x_pos[0] < x_pos[1] and y_pos[0] < y_pos[1]) or (x_pos[0] > x_pos[1] and y_pos[0] > y_pos[1]):
+            for i in range(0, diff + 1):
+                map[x_pos[0] + i][y_pos[0] + i] += 1
+        
+        # diagonal from top right to bottom left and bottom left to top right
+        elif (x_pos[0] > x_pos[1] and y_pos[0] < y_pos[1]) or (x_pos[0] < x_pos[1] and y_pos[0] > y_pos[1]):
+            for i in range(0, diff + 1):
+                map[x_pos[0] + i][y_pos[0] - i] += 1
 
 def get_result(map):
     count = 0
@@ -42,8 +63,7 @@ with open('day-5/inputs.txt', 'r') as f:
 
 map = [[0 for _ in range(0, max_y + 1)] for _ in range(0, max_x + 1)]
 for line in lines:
-    if line['x1'] == line['x2'] or line['y1'] == line['y2']: # part 1: only horizontal or vertical lines
-        update_map(map, (line['x1'], line['x2']), (line['y1'], line['y2']))
+    update_map(map, [line['x1'], line['x2']], [line['y1'], line['y2']])
 
 
 print(get_result(map))
