@@ -3,7 +3,8 @@ with open('day-7/inputs.txt', 'r') as f:
 
 positions = [int(x) for x in inputs[0].split(',')]
 positions.sort()
-median = positions[len(positions)//2]
 
-needed_fuel = sum(abs(median - pos) for pos in positions)
+mean = sum(pos for pos in positions) // len(positions)
+
+needed_fuel = sum((abs(mean - pos)**2 + abs(mean - pos)) // 2 for pos in positions)
 print(needed_fuel)
